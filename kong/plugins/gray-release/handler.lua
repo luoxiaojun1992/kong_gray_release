@@ -3,6 +3,9 @@
 -- can be called from your child implementation and will print logs
 -- in your `error.log` file (where all logs are printed).
 local BasePlugin = require "kong.plugins.base_plugin"
+local resty_http = require "resty.http"
+local cjson = require "cjson".new()
+cjson.encode_number_precision(16)
 
 
 local CustomHandler = BasePlugin:extend()
@@ -59,10 +62,19 @@ function CustomHandler:access(config)
   CustomHandler.super.access(self)
 
   -- Implement any custom logic here
-  local ok, err = kong.service.set_upstream(config.gray_upstream)
-  if not ok then
-    kong.log.err(err)
-    return
+  local httpc = resty_http.new()
+  local res, err = httpc:request_uri(config.api_url, {
+    method = "GET";
+    headers = kong.request.get_headers();
+  })
+  if not res then
+  	kong.log.err(err)
+  elseif res.status == 200 then
+  	local ok, err = kong.service.set_upstream(config.gray_upstream)
+    if not ok then
+        kong.log.err(err)
+        return
+    end
   end
 end
 
