@@ -12,8 +12,13 @@ return {
           {
             api_url = {
               type = "string",
-              uuid = true,
-              legacy = true,
+              required = true,
+            },
+          },
+          {
+            upstream_url = {
+              type = "string",
+              required = true,
             },
           },
         },
