@@ -59,7 +59,7 @@ function CustomHandler:access(config)
   CustomHandler.super.access(self)
 
   -- Implement any custom logic here
-  local ok, err = kong.service.set_upstream("user-gray-svc")
+  local ok, err = kong.service.set_upstream(config.gray_upstream)
   if not ok then
     kong.log.err(err)
     return

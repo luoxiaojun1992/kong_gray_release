@@ -16,7 +16,7 @@ return {
             },
           },
           {
-            upstream_url = {
+            gray_upstream = {
               type = "string",
               required = true,
             },
